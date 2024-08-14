@@ -99,7 +99,8 @@ def calculate_points(form_data):
         points += fumble_recovery_tds * 6
 
         # Interceptions (negative points)
-        points += calculate_qb_interceptions_points(interceptions)
+        if player_type == "QB":
+            points += calculate_qb_interceptions_points(interceptions)
 
     elif player_type == "K":
         field_goals = [int(fg) for fg in form_data.getlist("field_goals") if fg]
