@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Football Point Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+        .hidden {
+            display: none;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .result {
+            font-size: 24px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fantasy Football Point Calculator</h1>
+        
+        <form method="POST" id="calculator-form">
+            <div class="form-group">
+                <label for="player_name">Player Name:</label>
+                <input type="text" name="player_name" id="player_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="player_type">Player Type:</label>
+                <select name="player_type" id="player_type" required>
+                    <option value="">Select player type</option>
+                    <option value="QB">Quarterback (QB)</option>
+                    <option value="RB">Running Back (RB)</option>
+                    <option value="WR">Wide Receiver (WR)</option>
+                    <option value="K">Kicker (K)</option>
+                    <option value="DEF">Defense (DEF)</option>
+                </select>
+            </div>
+
+            <div id="offensive_stats" class="hidden">
+                <h3>Offensive Stats</h3>
+                <div class="stats-container">
+                    <div class="form-group">
+                        <label>Passing TDs: <input type="number" name="passing_tds" value="0" min="0"></label>
+                        <div id="passing_td_yards"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Passing Yards: <input type="number" name="passing_yards" value="0" min="0"></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Interceptions: <input type="number" name="interceptions" value="0" min="0"></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Rushing TDs: <input type="number" name="rushing_tds" value="0" min="0"></label>
+                        <div id="rushing_td_yards"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Rushing Yards: <input type="number" name="rushing_yards" value="0" min="0"></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Receiving TDs: <input type="number" name="receiving_tds" value="0" min="0"></label>
+                        <div id="receiving_td_yards"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Receiving Yards: <input type="number" name="receiving_yards" value="0" min="0"></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Passing 2-Point Conversions: <input type="number" name="passing_two_point_conversions" value="0" min="0"></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Rushing 2-Point Conversions: <input type="number" name="rushing_two_point_conversions" value="0" min="0"></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Fumble Recovery TDs: <input type="number" name="fumble_recovery_tds" value="0" min="0"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="kicker_stats" class="hidden">
+                <h3>Kicker Stats</h3>
+                <div class="form-group">
+                    <label>Number of Field Goals: <input type="number" name="num_field_goals" value="0" min="0"></label>
+                    <div id="field_goals"></div>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Game-Winning FG within 30 seconds of 4th Quarter:
+                        <select name="game_winning_fg">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <div id="defense_stats" class="hidden">
+                <h3>Defense Stats</h3>
+                <div class="stats-container">
+                    <div class="form-group">
+                        <label>Touchdowns: <input type="number" name="touchdowns" value="0" min="0"></label>
+                        <div id="def_td_yards"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Safeties: <input type="number" name="safeties" value="0" min="0"></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Sacks: <input type="number" name="sacks" value="0" min="0"></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Turnovers: <input type="number" name="turnovers" value="0" min="0"></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Points Allowed: <input type="number" name="points_allowed" value="0" min="0"></label>
+                    </div>
+                </div>
+            </div>
+
+            <input type="submit" name="calculate" value="Calculate Points">
+        </form>
+
+        {% if points is defined %}
+        <div class="result">
+            <h2>{{ player_name }}'s Points: {{ points }}</h2>
+            <form method="POST">
+                <input type="hidden" name="player_name" value="{{ player_name }}">
+                <input type="hidden" name="points" value="{{ points }}">
+                <div class="form-group">
+                    <label for="position">Save to Position:</label>
+                    <select name="position" id="position" required>
+                        <option value="QB">QB</option>
+                        <option value="RB1">RB1</option>
+                        <option value="RB2">RB2</option>
+                        <option value="WR1">WR1</option>
+                        <option value="WR2">WR2</option>
+                        <option value="DEF">DEF</option>
+                        <option value="K">K</option>
+                        <option value="FLEX">FLEX</option>
+                    </select>
+                </div>
+                <input type="submit" name="save_to_lineup" value="Save to Lineup">
+            </form>
+        </div>
+        {% endif %}
+
+        <h2>Current Lineup</h2>
+        <table>
+            <tr>
+                <th>Position</th>
+                <th>Player Name</th>
+                <th>Points</th>
+            </tr>
+            {% for position, player in lineup.items() %}
+            <tr>
+                <td>{{ position }}</td>
+                <td>{{ player.name }}</td>
+                <td>{{ player.points }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2"><strong>Total Score</strong></td>
+                <td><strong>{{ total_score }}</strong></td>
+            </tr>
+        </table>
+
+        <form method="POST" action="{{ url_for('reset_lineup') }}">
+            <input type="submit" value="Reset Lineup">
+        </form>
+    </div>
+
+    <script>
+        const playerType = document.getElementById('player_type');
+        const offensiveStats = document.getElementById('offensive_stats');
+        const kickerStats = document.getElementById('kicker_stats');
+        const defenseStats = document.getElementById('defense_stats');
+        const passingTdYards = document.getElementById('passing_td_yards');
+        const rushingTdYards = document.getElementById('rushing_td_yards');
+        const receivingTdYards = document.getElementById('receiving_td_yards');
+        const fieldGoals = document.getElementById('field_goals');
+        const defTdYards = document.getElementById('def_td_yards');
+
+        playerType.addEventListener('change', function() {
+            offensiveStats.classList.add('hidden');
+            kickerStats.classList.add('hidden');
+            defenseStats.classList.add('hidden');
+
+            switch(this.value) {
+                case 'QB':
+                case 'RB':
+                case 'WR':
+                    offensiveStats.classList.remove('hidden');
+                    break;
+                case 'K':
+                    kickerStats.classList.remove('hidden');
+                    break;
+                case 'DEF':
+                    defenseStats.classList.remove('hidden');
+                    break;
+            }
+        });
+
+        function updateTdYards(input, yardsDiv, namePrefix) {
+            const numTds = parseInt(input.value) || 0;
+            yardsDiv.innerHTML = '';
+            for (let i = 0; i < numTds; i++) {
+                const formGroup = document.createElement('div');
+                formGroup.className = 'form-group';
+                formGroup.innerHTML = `<label>TD ${i + 1} Yards: <input type="number" name="${namePrefix}_td_yards" min="0"></label>`;
+                yardsDiv.appendChild(formGroup);
+            }
+        }
+
+        document.getElementsByName('passing_tds')[0].addEventListener('input', function() {
+            updateTdYards(this, passingTdYards, 'passing');
+        });
+
+        document.getElementsByName('rushing_tds')[0].addEventListener('input', function() {
+            updateTdYards(this, rushingTdYards, 'rushing');
+        });
+
+        document.getElementsByName('receiving_tds')[0].addEventListener('input', function() {
+            updateTdYards(this, receivingTdYards, 'receiving');
+        });
+
+        document.getElementsByName('num_field_goals')[0].addEventListener('input', function() {
+            const numFieldGoals = parseInt(this.value) || 0;
+            fieldGoals.innerHTML = '';
+            for (let i = 0; i < numFieldGoals; i++) {
+                const formGroup = document.createElement('div');
+                formGroup.className = 'form-group';
+                formGroup.innerHTML = `<label>FG ${i + 1} Distance: <input type="number" name="field_goals" min="0"></label>`;
+                fieldGoals.appendChild(formGroup);
+            }
+        });
+
+        document.getElementsByName('touchdowns')[0].addEventListener('input', function() {
+            const numTouchdowns = parseInt(this.value) || 0;
+            defTdYards.innerHTML = '';
+            for (let i = 0; i < numTouchdowns; i++) {
+                const formGroup = document.createElement('div');
+                formGroup.className = 'form-group';
+                formGroup.innerHTML = `<label>TD ${i + 1} Yards: <input type="number" name="def_td_yards" min="0"></label>`;
+                defTdYards.appendChild(formGroup);
+            }
+        });
+    </script>
+</body>
+</html>
