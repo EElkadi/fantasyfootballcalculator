@@ -31,10 +31,26 @@ def calculate_qb_rushing_td_points(yards):
 def calculate_qb_passing_yards_points(yards):
     if yards < 200:
         return 0
-    points = 6  # Start with 6 points for 200-249 yards
-    additional_yards = yards - 200
-    points += additional_yards // 25  # Add 1 point for every 25 yards over 200
-    return points
+    elif yards < 250:
+        return 6
+    elif yards < 275:
+        return 7
+    elif yards < 300:
+        return 8
+    elif yards < 325:
+        return 10
+    elif yards < 350:
+        return 11
+    elif yards < 375:
+        return 12
+    elif yards < 400:
+        return 13
+    elif yards < 425:
+        return 14
+    else:
+        base_points = 14
+        additional_yards = yards - 400
+        return base_points + (additional_yards // 25)
 
 
 def calculate_qb_interceptions_points(ints):
