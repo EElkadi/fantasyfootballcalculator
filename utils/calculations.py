@@ -86,7 +86,8 @@ def calculate_points(form_data):
         points += calculate_qb_passing_yards_points(passing_yards)
 
         # Rushing and Receiving yards
-        points += calculate_performance_points(rushing_yards + receiving_yards)
+        points += calculate_performance_points(rushing_yards)
+        points += calculate_performance_points(receiving_yards)
 
         # Touchdowns
         passing_td_yards = form_data.getlist("passing_td_yards")
