@@ -139,6 +139,7 @@ def calculate_points(form_data):
         sacks = int(form_data["sacks"])
         turnovers = int(form_data["turnovers"])
         points_allowed = int(form_data["points_allowed"])
+        yards_allowed = int(form_data["yards_allowed"])  # New field
 
         # Defensive touchdowns
         td_yards = form_data.getlist("def_td_yards")
@@ -166,5 +167,14 @@ def calculate_points(form_data):
             points -= 5
         else:
             points -= 10
+
+        # New: Points for yards allowed
+        if yards_allowed < 100:
+            points += 10
+        elif yards_allowed < 150:
+            points += 7
+        elif yards_allowed < 200:
+            points += 3
+        # No points added for 200+ yards allowed
 
     return points
