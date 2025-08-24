@@ -120,6 +120,7 @@ def calculate_points(form_data):
             points += calculate_qb_interceptions_points(interceptions)
 
     elif player_type == "K":
+        # Field goals
         field_goals = [int(fg) for fg in form_data.getlist("field_goals") if fg]
         for fg in field_goals:
             if fg >= 50:
@@ -129,6 +130,11 @@ def calculate_points(form_data):
             else:
                 points += 1
 
+        # Extra points (1 point each)
+        extra_points = int(form_data.get("extra_points", 0))
+        points += extra_points * 1
+
+        # Game-winning field goal bonus
         game_winning_fg = form_data.get("game_winning_fg")
         if game_winning_fg == "yes":
             points += 6

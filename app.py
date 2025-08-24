@@ -20,7 +20,8 @@ def calculator():
             "WR2": {"name": "", "points": 0},
             "DEF": {"name": "", "points": 0},
             "K": {"name": "", "points": 0},
-            "FLEX": {"name": "", "points": 0},
+            "FLEX1": {"name": "", "points": 0},
+            "FLEX2": {"name": "", "points": 0},
         }
 
     if request.method == "POST":
@@ -60,7 +61,8 @@ def reset_lineup():
         "WR2": {"name": "", "points": 0},
         "DEF": {"name": "", "points": 0},
         "K": {"name": "", "points": 0},
-        "FLEX": {"name": "", "points": 0},
+        "FLEX1": {"name": "", "points": 0},
+        "FLEX2": {"name": "", "points": 0},
     }
     session.modified = True
     return redirect(url_for("calculator"))
